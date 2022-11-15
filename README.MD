@@ -3,4 +3,4 @@
 ## This is mostly a dashboard app
 
 ### It should look like this
-[Dashboard](./wireframes/Dashboard.jpeg)
+![Dashboard](./wireframes/Dashboard.jpeg)
