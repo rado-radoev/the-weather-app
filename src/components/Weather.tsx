@@ -4,14 +4,26 @@ import Reading from './Reading';
 import { Measurement } from '../interfaces/app_interfaces';
 import { MEASURE_TYPE, MEASURE_ABBREVIATION } from '../enums/app_enums';
 
-const currentLat: number = 32.78857209510001;
-const currentLon: number = -117.06954471813752;
 const appId: string = import.meta.env.VITE_OPENWEATHERMAP_APP_ID;
+const smartThingsToken: string = import.meta.env.VITE_SMART_THINGS_TOKEN;
+
+// center of the world
+let currentLat: number = 39;
+let currentLon: number = 34;
+
+const success = (pos: any) => {
+  const crd = pos.coords;
+  currentLat = crd.latitude,
+  currentLon = crd.longitude
+}
+
+const error = (err: any) => {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+navigator.geolocation.getCurrentPosition(success, error)
 
 const baseUrl: string = `https://api.openweathermap.org/data/3.0/onecall?lat=${currentLat}&lon=${currentLon}&exclude=minutely&units=imperial&appid=${appId}`
-
-
-const smartThingsToken: string = import.meta.env.VITE_SMART_THINGS_TOKEN;
 const smartThingsButtonTempUrl: string = `https://api.smartthings.com/v1/devices/${import.meta.env.VITE_SMART_THINGS_BTN_ID}/status`
 
 function Weather() {
