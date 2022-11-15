@@ -11,13 +11,13 @@ const smartThingsToken: string = import.meta.env.VITE_SMART_THINGS_TOKEN;
 let currentLat: number = 39;
 let currentLon: number = 34;
 
-const success = (pos: any) => {
+const success = (pos: GeolocationPosition) => {
   const crd = pos.coords;
   currentLat = crd.latitude,
   currentLon = crd.longitude
 }
 
-const error = (err: any) => {
+const error = (err: GeolocationPositionError) => {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
 
