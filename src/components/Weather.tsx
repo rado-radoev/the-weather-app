@@ -4,45 +4,64 @@ import Reading from './Reading';
 import { Measurement } from '../interfaces/app_interfaces';
 import { MEASURE_TYPE, MEASURE_ABBREVIATION } from '../enums/app_enums';
 
-const appId: string = import.meta.env.VITE_OPENWEATHERMAP_APP_ID;
-const smartThingsToken: string = import.meta.env.VITE_SMART_THINGS_TOKEN;
-
-// center of the world
-let currentLat: number = 39;
-let currentLon: number = 34;
-
-const success = (pos: GeolocationPosition) => {
-  const crd = pos.coords;
-  currentLat = crd.latitude,
-  currentLon = crd.longitude
-}
-
-const error = (err: GeolocationPositionError) => {
-  console.warn(`ERROR(${err.code}): ${err.message}`);
-}
-
-navigator.geolocation.getCurrentPosition(success, error)
-
-const baseUrl: string = `https://api.openweathermap.org/data/3.0/onecall?lat=${currentLat}&lon=${currentLon}&exclude=minutely&units=imperial&appid=${appId}`
-const smartThingsButtonTempUrl: string = `https://api.smartthings.com/v1/devices/${import.meta.env.VITE_SMART_THINGS_BTN_ID}/status`
-
 function Weather() {
+  const [coordinates, setCoordinates] = useState<number[]>([39, 34]) // <-- center of the world
   const [weather, setWeather] = useState<any>(null);
   const [indoorData, setIndoorData] = useState<any>(null);
 
+
+  const [currentLat, currentLon] = coordinates
+  const appId: string = import.meta.env.VITE_OPENWEATHERMAP_APP_ID;
+  const smartThingsToken: string = import.meta.env.VITE_SMART_THINGS_TOKEN;
+  const openWeatherUrl: string = `https://api.openweathermap.org/data/3.0/onecall?lat=${currentLat}&lon=${currentLon}&exclude=minutely&units=imperial&appid=${appId}`
+  const smartThingsButtonTempUrl: string = `https://api.smartthings.com/v1/devices/${import.meta.env.VITE_SMART_THINGS_BTN_ID}/status`
+
+  const success = (pos: GeolocationPosition) => {
+    const crd = pos.coords;
+    setCoordinates(() => [crd.latitude, crd.longitude])
+  }
+
+  const error = (err: GeolocationPositionError) => {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+  }
+
+  const options = {
+    maximumAge: 60000
+  }
+
+    const fetchWeather = async ( weatherURL: string) => {
+    try {
+      const res = await axios.get(weatherURL);
+      const { data } = res;
+      setWeather(() => data);
+      console.log('OpenWeather data fetch')
+    } catch (error) {
+      console.log(`OpenWeather API data fetch failed: ${error}`);
+    }
+  }
+
+  const fetchSmartThings = async( smartThingsURL: string ) => {
+    try {
+      const smartThingsAuthHeader = { headers: { Authorization: `Bearer ${smartThingsToken}`} }
+      const res = await axios.get(smartThingsURL, smartThingsAuthHeader);
+      const { data } = res;
+      setIndoorData(() => data);
+      console.log('SmartThings data fetch')
+    } catch (error) {
+      console.log(`Samsung SmartThings data fetch failed ${error}`);
+    }
+  }
+
   useEffect(() => {
-    axios.get(baseUrl).then(response => {
-      setWeather((): any => response.data)
-    });
+    // Only get the position on app load. This will be used by a static device. No need to run all the time.
+    navigator.geolocation.getCurrentPosition(success, error, options)
+  }, [])
 
-   axios.get(smartThingsButtonTempUrl, { headers: { Authorization: `Bearer ${smartThingsToken}`} })
-    .then(response => {
-      setIndoorData((): any => response.data)
-    });
-  },[])
-
-
-  if (!weather) return null;
+  useEffect(() => {
+    // fetchWeather(openWeatherUrl);
+    fetchSmartThings(smartThingsButtonTempUrl);
+    console.log('Invoked useEffect')
+  },[coordinates])
 
   const readings: Measurement[]  = [
     {
@@ -80,19 +99,19 @@ function Weather() {
       measure: MEASURE_ABBREVIATION.PERCENT
     },
   ]
- 
+
   return (
-   <div 
-      className="grid grid-flow-col grid-cols-3 gap-x-px grid-rows-3 bg-white"
+   <div
+      className="grid grid-flow-col grid-cols-3 gap-x-px grid-rows-3 bg-white w-screen h-screen"
     >
-    {readings.map((reading, index) => 
+    {readings.map((reading, index) =>
       <Reading
         key={index}
         measure={reading.measure}
         measure_type={reading.measure_type}
         measure_value={reading.measure_value}
       />
-      
+
     )}
   </div>
   )
