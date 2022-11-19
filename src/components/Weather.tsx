@@ -3,11 +3,14 @@ import axios from 'axios';
 import Reading from './Reading';
 import { Measurement } from '../interfaces/app_interfaces';
 import { MEASURE_TYPE, MEASURE_ABBREVIATION } from '../enums/app_enums';
+import WindDirection from './WindDirection';
 
 function Weather() {
   const [coordinates, setCoordinates] = useState<number[]>([32, -117]) // <-- center of the world
   const [weather, setWeather] = useState<any>(null);
   const [indoorData, setIndoorData] = useState<any>(null);
+  const [wind, setWind] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
   const [currentLat, currentLon] = coordinates
@@ -21,9 +24,8 @@ function Weather() {
     try {
       const res = await axios.get(weatherURL);
       const { data } = res;
+      getWindData(data);
       setWeather(() => data);
-      console.log('OpenWeather data fetch')
-      console.log(weatherURL)
     } catch (error) {
       console.log(`OpenWeather API data fetch failed: ${error}`);
     }
@@ -35,12 +37,26 @@ function Weather() {
       const res = await axios.get(smartThingsURL, smartThingsAuthHeader);
       const { data } = res;
       setIndoorData(() => data);
-      console.log('SmartThings data fetch')
+      // console.log('SmartThings data fetch')
     } catch (error) {
       console.log(`Samsung SmartThings data fetch failed ${error}`);
     }
   }
 
+  const getWindData = (w: any) => {
+    const direction: number[] = [];
+    const speed: number[] = [];
+
+    console.log(w)
+    w.hourly.forEach((entry: any) => {
+      direction.push(entry.wind_deg);
+      speed.push(entry.wind_speed);
+    })
+
+    setWind(() => ({direction, speed}))
+  }
+  
+  
   // useEffect(() => {
   //   // Only get the position on app load. This will be used by a static device. No need to run all the time.
   //   const success = (pos: GeolocationPosition) => {
@@ -61,20 +77,16 @@ function Weather() {
 
   useEffect(() => {
     fetchWeather(openWeatherUrl);
-    fetchSmartThings(smartThingsButtonTempUrl);
+    // fetchSmartThings(smartThingsButtonTempUrl);
     console.log('Invoked useEffect')
   },[coordinates])
 
+  
   const readings: Measurement[]  = [
-    // {
-    //   measure_type: MEASURE_TYPE.ALERTS,
-    //   measure_value: weather?.alerts[0]?.event,
-    //   measure: weather?.alerts[0]?.description
-    // },
     {
       measure_type: MEASURE_TYPE.ALERTS,
-      measure_value: weather?.alerts[0].event,
-      measure: MEASURE_ABBREVIATION.ALERT
+      measure_value: 'weather?.alerts[0].event',
+      measure: MEASURE_ABBREVIATION.ALERTS
     },
     {
       measure_type: MEASURE_TYPE.GUST,
@@ -111,6 +123,8 @@ function Weather() {
       measure: MEASURE_ABBREVIATION.PERCENT
     },
   ]
+  
+   
 
   return (
    <div
@@ -123,7 +137,8 @@ function Weather() {
         measure_type={reading.measure_type}
         measure_value={reading.measure_value}
       />
-    )}
+      )}
+      <WindDirection direction={wind.direction} speed={wind.speed} />
   </div>
   )
 }

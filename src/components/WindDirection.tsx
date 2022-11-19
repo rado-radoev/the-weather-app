@@ -1,18 +1,21 @@
 import { calculateWindRose } from 'react-windrose-chart';
 import { Chart } from 'react-windrose-chart';
 
-function WindDirection() {
-  interface windData {
-    direction: number[];
-    speed: number[];
-  }
+
+interface windData {
+  direction: number[];
+  speed: number[];
+}
+
+function WindDirection(props: windData) {
 
   const data = {
-    direction: [270, 256, 240,...],
-    speed: [ 1.02, 0.85, 0.98,...]
+    direction:  props.direction,
+    speed: props.speed
   }
 
   const windRoseData = calculateWindRose(data);
+  console.log(windRoseData)
 
   const columns: string[] = [
     "angle",
@@ -28,12 +31,12 @@ function WindDirection() {
 
  
   return (
-    <div>WindDirection
+    <div>
       <Chart 
         chartData={windRoseData}
+        columns={columns}
         responsive
         legendGap={10}
-        columns={columns}
       />
     </div>
   )
