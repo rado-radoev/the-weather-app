@@ -66,6 +66,11 @@ function Weather() {
   },[coordinates])
 
   const readings: Measurement[]  = [
+    // {
+    //   measure_type: MEASURE_TYPE.ALERTS,
+    //   measure_value: weather?.alerts[0]?.event,
+    //   measure: weather?.alerts[0]?.description
+    // },
     {
       measure_type: MEASURE_TYPE.ALERTS,
       measure_value: weather?.alerts[0].event,
@@ -118,7 +123,6 @@ function Weather() {
         measure_type={reading.measure_type}
         measure_value={reading.measure_value}
       />
-
     )}
   </div>
   )
