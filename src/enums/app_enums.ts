@@ -1,4 +1,5 @@
 export enum MEASURE_TYPE {
+  ALERTS = 'alerts',
   GUST = 'gust',
   AVERAGE = 'average',
   BARO = 'baro',
@@ -16,4 +17,5 @@ export enum MEASURE_ABBREVIATION {
   FAHRENHEIT = 'F',
   CELSIUS = 'C',
   PERCENT = '%',
-} 
+  ALERT = '!'
+}
