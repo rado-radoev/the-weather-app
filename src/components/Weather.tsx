@@ -124,7 +124,7 @@ function Weather() {
     },
   ]
   
-   
+   if (!weather) return <p>Loading</p>
 
   return (
    <div
