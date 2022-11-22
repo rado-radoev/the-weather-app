@@ -1,14 +1,10 @@
-import { Measurement } from "./interfaces/app_interfaces";
+import { IMeasurement } from "./interfaces/app_interfaces";
+import { MEASURE_TYPE, MEASURE_ABBREVIATION } from "./enums/app_enums";
 
-interface MeasurementProps extends Measurement {}
-
-export class Measurement implements MeasurementProps{
-  measure_type: string;
-  measure_value: number | string;
-  measure: string
-  constructor () {
-    this.measure_type = ''
-    this.measure_value = ''
-    this.measure = ''
-  }
+export class Measurement implements IMeasurement{
+  constructor (
+    public measure_type: MEASURE_TYPE,
+    public measure_value: number | string,
+    public measure: MEASURE_ABBREVIATION,
+  ) {}
 }

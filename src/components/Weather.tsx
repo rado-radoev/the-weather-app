@@ -1,9 +1,11 @@
 import { useState, useEffect} from 'react';
 import axios from 'axios';
 import Reading from './Reading';
-import { Measurement } from '../interfaces/app_interfaces';
+import Loading from './Loading';
 import { MEASURE_TYPE, MEASURE_ABBREVIATION } from '../enums/app_enums';
 import WindDirection from './WindDirection';
+import { MeasurementBuilder } from '../MeasurementBuilder';
+import { Measurement } from '../Measurement';
 
 function Weather() {
   const [coordinates, setCoordinates] = useState<number[]>([32, -117]) // <-- center of the world
@@ -26,6 +28,9 @@ function Weather() {
       const { data } = res;
       getWindData(data);
       setWeather(() => data);
+      if (data) {
+        setIsLoading(() => false)
+      }
     } catch (error) {
       console.log(`OpenWeather API data fetch failed: ${error}`);
     }
@@ -77,60 +82,73 @@ function Weather() {
 
   useEffect(() => {
     fetchWeather(openWeatherUrl);
-    // fetchSmartThings(smartThingsButtonTempUrl);
+    fetchSmartThings(smartThingsButtonTempUrl);
     console.log('Invoked useEffect')
   },[coordinates])
 
-  
-  const readings: Measurement[]  = [
-    {
-      measure_type: MEASURE_TYPE.ALERTS,
-      measure_value: 'weather?.alerts[0].event',
-      measure: MEASURE_ABBREVIATION.ALERTS
-    },
-    {
-      measure_type: MEASURE_TYPE.GUST,
-      measure_value: weather?.current.wind_speed,
-      measure: MEASURE_ABBREVIATION.METERS_PER_SECOND
-    },
-    {
-      measure_type: MEASURE_TYPE.AVERAGE,
-      measure_value: weather?.current.wind_speed,
-      measure: MEASURE_ABBREVIATION.METERS_PER_SECOND
-    },    {
-      measure_type: MEASURE_TYPE.BARO,
-      measure_value: weather?.current.pressure,
-      measure: MEASURE_ABBREVIATION.HECTO_PASCALS
-    },    {
-      measure_type: MEASURE_TYPE.RAIN,
-      measure_value: weather?.current.clouds,
-      measure: MEASURE_ABBREVIATION.MILLIMETER
-    },    {
-      measure_type: MEASURE_TYPE.OUTDOOR_TEMP,
-      measure_value: weather?.current.temp,
-      measure: MEASURE_ABBREVIATION.FAHRENHEIT
-    },    {
-      measure_type: MEASURE_TYPE.OUTDOOR_HUMIDITY,
-      measure_value: weather?.current.humidity,
-      measure: MEASURE_ABBREVIATION.PERCENT
-    },    {
-      measure_type: MEASURE_TYPE.INDOOR_TEMP,
-      measure_value: indoorData?.components.main.temperatureMeasurement.temperature.value,
-      measure: MEASURE_ABBREVIATION.FAHRENHEIT
-    },    {
-      measure_type: MEASURE_TYPE.INDOOR_HUMIDITY,
-      measure_value: 55,
-      measure: MEASURE_ABBREVIATION.PERCENT
-    },
+  const weatherReading: Measurement[] = [
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.ALERTS)
+      .measure_value('weather?.alerts[0].event')
+      .measure(MEASURE_ABBREVIATION.ALERTS)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.GUST)
+      .measure_value(weather?.current.wind_speed)
+      .measure(MEASURE_ABBREVIATION.METERS_PER_SECOND)
+      .build()
+    ,
+      new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.AVERAGE)
+      .measure_value(weather?.current.wind_speed)
+      .measure(MEASURE_ABBREVIATION.METERS_PER_SECOND)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.BARO)
+      .measure_value(weather?.current.pressure)
+      .measure(MEASURE_ABBREVIATION.HECTO_PASCALS)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.RAIN)
+      .measure_value(weather?.current.clouds)
+      .measure(MEASURE_ABBREVIATION.MILLIMETER)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.OUTDOOR_TEMP)
+      .measure_value(weather?.current.temp)
+      .measure(MEASURE_ABBREVIATION.FAHRENHEIT)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.OUTDOOR_HUMIDITY)
+      .measure_value(weather?.current.humidity)
+      .measure(MEASURE_ABBREVIATION.PERCENT)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.INDOOR_TEMP)
+      .measure_value(indoorData?.components.main.temperatureMeasurement.temperature.value)
+      .measure(MEASURE_ABBREVIATION.FAHRENHEIT)
+      .build()
+    ,
+    new MeasurementBuilder()
+      .measure_type(MEASURE_TYPE.INDOOR_HUMIDITY)
+      .measure_value(55)
+      .measure(MEASURE_ABBREVIATION.PERCENT)
+      .build()
   ]
   
-   if (!weather) return <p>Loading</p>
+   if (isLoading) return <Loading />
 
   return (
    <div
       className="grid grid-flow-col grid-cols-3 gap-x-px grid-rows-3 bg-white w-screen h-screen"
     >
-    {readings.map((reading, index) =>
+    {weatherReading.map((reading, index) =>
       <Reading
         key={index}
         measure={reading.measure}

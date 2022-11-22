@@ -8,7 +8,8 @@ export enum MEASURE_TYPE {
   OUTDOOR_TEMP      = 'outdoor_temp',
   OUTDOOR_HUMIDITY  = 'outdoor_humidity',
   INDOOR_TEMP       = 'indoor_temp',
-  INDOOR_HUMIDITY   = 'indoor_humidity'
+  INDOOR_HUMIDITY   = 'indoor_humidity',
+  INITIALIZE        = ''
 }
 
 export enum MEASURE_ABBREVIATION {
@@ -19,4 +20,5 @@ export enum MEASURE_ABBREVIATION {
   CELSIUS           = 'C',
   PERCENT           = '%',
   ALERTS            = '!',
+  INITIALIZE        = ''
 } 
