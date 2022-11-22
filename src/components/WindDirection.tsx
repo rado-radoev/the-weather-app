@@ -35,8 +35,8 @@ function WindDirection(props: windData) {
       <Chart 
         chartData={windRoseData}
         columns={columns}
-        responsive
         legendGap={10}
+        responsive
       />
     </div>
   )

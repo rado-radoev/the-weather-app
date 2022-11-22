@@ -155,7 +155,7 @@ function Weather() {
         measure_type={reading.measure_type}
         measure_value={reading.measure_value}
       />
-      )}
+    )}
       <WindDirection direction={wind.direction} speed={wind.speed} />
   </div>
   )

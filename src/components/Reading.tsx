@@ -1,9 +1,9 @@
 import logo from '../logo.svg';
-import { Measurement } from '../interfaces/app_interfaces';
+import { IMeasurement } from '../interfaces/app_interfaces';
 
 import { toUpper } from 'lodash'
 
-function Reading(props: Measurement) {
+function Reading(props: IMeasurement) {
   return (
     <div 
       key={props.measure_value?.toLocaleString() || 0} 
