@@ -31,7 +31,7 @@ function WindDirection(props: windData) {
 
  
   return (
-    <div>
+    <div className="col-span-1 row-span-3 bg-gray-300">
       <Chart 
         chartData={windRoseData}
         columns={columns}
