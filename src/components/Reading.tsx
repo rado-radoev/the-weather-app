@@ -9,6 +9,7 @@ interface WeatherReadingProps extends IMeasurement {
 }
 
 function Reading(props: WeatherReadingProps) {
+  const {icon: weatherIcon, description: weatherDescription, ...rest} = props.weather_conditions
   return (
     <div 
       key={props.measure_value?.toLocaleString() || 0} 
@@ -18,9 +19,13 @@ function Reading(props: WeatherReadingProps) {
       <div>{props.measure_value?.toLocaleString() || 0}
         <span className='ml-2'>{props.measure}</span>
       </div>
-      //TODO: FIX THIS 👇
-      <ImageItem weather_conditions={props.weather_conditions}/>
-      {/* <img src={logo} width={30} height={30} alt='sun'/> */}
+      {/* TODO: FIX THIS. This should display different icon depending on the reading type */}
+      <ImageItem 
+        icon={weatherIcon}
+        description={weatherDescription} 
+        id={props.weather_conditions.id} 
+        main={props.weather_conditions.main}        
+        />
     </div>
   )
 }

@@ -15,8 +15,7 @@ function WindDirection(props: windData) {
   }
 
   const windRoseData = calculateWindRose(data);
-  console.log(windRoseData)
-
+  
   const columns: string[] = [
     "angle",
     "0-1",

@@ -52,7 +52,6 @@ function Weather() {
     const direction: number[] = [];
     const speed: number[] = [];
 
-    console.log(w)
     w.hourly.forEach((entry: any) => {
       direction.push(entry.wind_deg);
       speed.push(entry.wind_speed);
@@ -83,7 +82,6 @@ function Weather() {
   useEffect(() => {
     fetchWeather(openWeatherUrl);
     fetchSmartThings(smartThingsButtonTempUrl);
-    console.log('Invoked useEffect')
   },[coordinates])
 
   const weatherReading: Measurement[] = [
@@ -154,7 +152,7 @@ function Weather() {
         measure={reading.measure}
         measure_type={reading.measure_type}
         measure_value={reading.measure_value}
-        weather_conditions={weather.current.weather}
+        weather_conditions={weather.current.weather[0]}
       />
     )}
       <WindDirection direction={wind.direction} speed={wind.speed} />
