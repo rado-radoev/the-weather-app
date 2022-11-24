@@ -6,3 +6,10 @@ export interface IMeasurement {
   measure_value: string | MEASUREMENTVALUE ;
   measure: MEASURE_ABBREVIATION;
 }
+
+export interface WeatherCondition {
+  id: string;
+  main: string;
+  description: string;
+  icon: string;
+}

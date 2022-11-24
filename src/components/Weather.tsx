@@ -154,6 +154,7 @@ function Weather() {
         measure={reading.measure}
         measure_type={reading.measure_type}
         measure_value={reading.measure_value}
+        weather_conditions={weather.current.weather}
       />
     )}
       <WindDirection direction={wind.direction} speed={wind.speed} />

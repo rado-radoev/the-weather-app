@@ -1,8 +1,10 @@
+import { WeatherCondition } from "../interfaces/app_interfaces"
 
-function ImageItem() {
+
+export default function ImageItem(props: WeatherCondition) {
   return (
-    <div>there is an image displayed here</div>
+    <div>
+      <img src={`../../assets/icons${props.icon}`} alt={props.description} />
+    </div>
   )
 }
-
-export default ImageItem
