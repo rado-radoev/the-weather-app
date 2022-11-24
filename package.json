@@ -12,7 +12,7 @@
     "jest": "jest",
     "changelog": "auto-changelog -p",
     "changelog:json": "auto-changelog --template json --output changelog-data.json",
-    "changelog:template": "auto-changelog --template changelog-template.hbs",
+    "changelog:template": "auto-changelog -p --template changelog-template.hbs",
     "patch": "npm version patch -m \"Code merge %s\""
   },
   "dependencies": {

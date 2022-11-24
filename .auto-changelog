@@ -2,5 +2,8 @@
   "output": "CHANGELOG.md",
   "template": "keepachangelog",
   "unreleased": true,
-  "commitLimit": false
+  "commitLimit": false,
+  "sort-commits": "date-desc",
+  "release-summary": true,
+  "ignore-commit-pattern": "Code merge"
 }
