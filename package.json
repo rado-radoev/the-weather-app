@@ -13,7 +13,7 @@
     "changelog": "auto-changelog -p",
     "changelog:json": "auto-changelog --template json --output changelog-data.json",
     "changelog:template": "auto-changelog -p --template changelog-template.hbs",
-    "patch": "npm version patch -m \"Code merge %s\""
+    "patch": "npm version patch -m \"Code merge %s\" && auto-changelog -p --template changelog-template.hbs && git add CHANGELOG.md"
   },
   "dependencies": {
     "axios": "^1.1.3",

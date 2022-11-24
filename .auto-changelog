@@ -5,5 +5,5 @@
   "commitLimit": false,
   "sort-commits": "date-desc",
   "release-summary": true,
-  "ignore-commit-pattern": "Code merge"
+  "ignore-commit-pattern": "^[Cc]ode\\smerge\\s\\d+.\\d+.\\d+$"
 }
